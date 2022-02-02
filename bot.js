@@ -29,16 +29,12 @@ const authentication = async () => {
 const id = '1_KE_EGB_3SVReGXUs5COBv3qLHY9fikDYO_7Xd6jEVY'
 
 //constant globals
-const url_prefix = "https://careers.gamestop.com";
-const url = "https://careers.gamestop.com/en-US/search?orderby=-date";
 const gmedd_report_model_url = "https://gmedd.com/report-model/";
 
 //global variables
 var today = "";
 var todays_num_jobs = 0;
 var todays_jobs = [];
-var todays_filings = [];
-var todays_news_releases = [];
 
 // Initialize Discord Bot
 var client = new Discord.Client();
@@ -89,43 +85,6 @@ client.on('message', async msg => {
                 await get_the_jobs();
                 display_todays_jobs(msg.channel, logoattachment);
                 break;
-            case 'gsnews': 
-                //fetch the data
-                await get_the_news();
-                if (todays_news_releases.length == 0) {
-                    let news_embed = new Discord.MessageEmbed()
-                    .setTitle(`${today} News Releases`)
-                    .attachFiles(logoattachment)
-                    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-                    .setColor('#242424')
-                    .setThumbnail('attachment://logo.png')
-                    .setTimestamp()
-                    .setFooter('Based on public data available on gamestop.com', client.user.avatarURL())
-                    .setDescription('No news releases available today.');
-                    msg.channel.send(news_embed);
-                }
-                else {
-                    display_news_releases(msg, todays_news_releases, logoattachment);
-                }
-                break;
-            case 'filings': 
-                await get_the_filings();
-                if (todays_filings.length == 0) {
-                    let filings_embed = new Discord.MessageEmbed()
-                    .setTitle(`SEC Filings`)
-                    .attachFiles(logoattachment)
-                    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-                    .setColor('#242424')
-                    .setThumbnail('attachment://logo.png')
-                    .setTimestamp()
-                    .setFooter('Based on public data available on gamestop.com', client.user.avatarURL())
-                    .setDescription('No SEC Filings available today.');
-                    msg.channel.send(filings_embed);
-                }
-                else {
-                    display_sec_filings(msg, logoattachment);
-                }
-                break;
             case 'hires':
                 var hires = await get_the_hires();
                 display_the_hires(msg, hires, logoattachment);
@@ -141,9 +100,6 @@ client.on('message', async msg => {
             case 'report': 
                 var report = await get_the_report();
                 display_the_report(msg, report, logoattachment);
-                break;
-            case 'products':
-                //msg.channel.send(await get_the_products("https://www.gamestop.com/search/?q=all"));
                 break;
             case 'orders':
                 var order_form = await get_the_order_form();
@@ -293,7 +249,6 @@ function display_the_help(msg, logoattachment) {
         {name: `**/model**`, value: `Returns link to the current [GMEdd](GMEdd.com) GameStop financial model`},
         {name: `**/report**`, value: `Returns link to the [GMEdd](GMEdd.com) GameStop Research Report`},
         {name: `**/orders**`, value: `Returns link to the GMEdd GameStop Order Form`}
-        //{name: `**!products**`, value: `Returns the total amount of available products on gamestop.com`}
     );
     msg.channel.send(embed);
 }
@@ -362,7 +317,7 @@ async function load_careers_site() {
     }
     
     //request careers webpage
-    var url = 'https://careers.gamestop.com/us/en/search-results?keywords='
+    const url = 'https://careers.gamestop.com/us/en/search-results?keywords='
     const careersPage = url.concat('&from=', parseInt((pageNum * 10) - 10))
     console.log(careersPage)
     

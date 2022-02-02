@@ -31,8 +31,6 @@ const id = '1_KE_EGB_3SVReGXUs5COBv3qLHY9fikDYO_7Xd6jEVY'
 //constant globals
 const url_prefix = "https://careers.gamestop.com";
 const url = "https://careers.gamestop.com/en-US/search?orderby=-date";
-//const url_prefix = "https://gamestop-careers.jobs.net";
-//const url = "https://gamestop-careers.jobs.net/en-US/search?orderby=-date";
 const gmedd_report_model_url = "https://gmedd.com/report-model/";
 
 //global variables
@@ -70,12 +68,10 @@ client.on('message', async msg => {
     if (msg.content.toLowerCase().includes('chairman')) {
         msg.react('🪑');
     }
-
     //ryan easter egg
     if (msg.content.toLowerCase().includes('brick by brick')) {
         msg.react('🧱');
     }
-
     //rod easter egg
     if (msg.content.toLowerCase().includes('order numbers')) {
         msg.react('<:rod:820207421460578335>');
@@ -93,7 +89,6 @@ client.on('message', async msg => {
                 await get_the_jobs();
                 display_todays_jobs(msg.channel, logoattachment);
                 break;
-            
             case 'gsnews': 
                 //fetch the data
                 await get_the_news();
@@ -113,7 +108,6 @@ client.on('message', async msg => {
                     display_news_releases(msg, todays_news_releases, logoattachment);
                 }
                 break;
-
             case 'filings': 
                 await get_the_filings();
                 if (todays_filings.length == 0) {
@@ -132,40 +126,32 @@ client.on('message', async msg => {
                     display_sec_filings(msg, logoattachment);
                 }
                 break;
-
             case 'hires':
                 var hires = await get_the_hires();
                 display_the_hires(msg, hires, logoattachment);
                 break;
-
             case 'press':
                 var press = await get_the_press();
                 display_the_press(msg, press, logoattachment);
                 break;
-
             case 'model':
                 var model = await get_the_model();
                 display_the_model(msg, model, logoattachment);
                 break;
-
             case 'report': 
                 var report = await get_the_report();
                 display_the_report(msg, report, logoattachment);
                 break;
-
             case 'products':
                 //msg.channel.send(await get_the_products("https://www.gamestop.com/search/?q=all"));
                 break;
-
             case 'orders':
                 var order_form = await get_the_order_form();
                 display_the_order_form(msg, order_form, logoattachment);
                 break;
-
             case 'test':
                 await load_careers_site();
                 break;
-
             case 'commands':
                 display_the_help(msg, logoattachment);
                 break;
@@ -174,7 +160,6 @@ client.on('message', async msg => {
 });
 
 client.login(token);
-
 
 function display_todays_jobs(channel, logoattachment) {
     //build embed properties
@@ -223,50 +208,6 @@ function display_todays_jobs(channel, logoattachment) {
             //.then(console.log)
             .catch(console.error);        
 
-}
-
-
-function display_sec_filings(msg, logoattachment) {
-    //build embed properties
-    let sec_embed = new Discord.MessageEmbed()
-        .setTitle(`GameStop SEC Filings`)
-        .attachFiles(logoattachment)
-        .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-        .setColor('#242424')
-        .setThumbnail('attachment://logo.png')
-        .setTimestamp()
-        .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
-
-    //list each individual sec filing in the embed
-    for (var i = 0; i < todays_filings.length; i++) {
-        var filing = todays_filings[i];
-        sec_embed.addFields(
-            { name: filing.date + " Form " + filing.form_num, value: filing.filing_link},
-            { name: "Description: ", value: filing.description, inline: true},
-            { name: "Filing Group: ", value: filing.filing_group, inline: true}  
-        )  
-    }
-    msg.channel.send(sec_embed);
-}
-
-function display_news_releases(msg, news, logoattachment) {
-    //build embed properties
-    let news_embed = new Discord.MessageEmbed()
-    .setTitle(`${today} GameStop News Releases`)
-    .attachFiles(logoattachment)
-    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-    .setColor('#242424')
-    .setThumbnail('attachment://logo.png')
-    .setTimestamp()
-    .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
-    
-    for (var i=0; i < news.length; i++) { 
-        var pr = news[i];
-        news_embed.addFields(
-            { name: `**${pr.headline}**`, value: pr.link}
-        )
-    }
-    msg.channel.send(news_embed);
 }
 
 function display_the_model(msg, model, logoattachment) {
@@ -321,20 +262,6 @@ function display_the_report(msg, report, logoattachment) {
     .setTimestamp()
     .addField('⠀', report);
     msg.channel.send(report_embed);
-}
-
-function display_the_products(msg, products, logoattachment) {
-    //build embed properties
-    let products_embed = new Discord.MessageEmbed()
-    .setTitle(`GameStop.com Available Products: `)
-    .attachFiles(logoattachment)
-    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-    .setColor('#242424')
-    .setThumbnail('attachment://logo.png')
-    .setTimestamp()
-    .addField('Total: ', products.all)
-    .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
-    msg.channel.send(products_embed);
 }
 
 function display_the_order_form(msg, order_form, logoattachment) {
@@ -414,94 +341,6 @@ async function get_the_report() {
     });
 
     return link;
-}
-
-//checks for any new news releases on gamestop's website
-async function get_the_news() {
-    const news_releases_url = "https://news.gamestop.com/news-releases-0";
-    const response = await got(news_releases_url);
-    const dom = new JSDOM(response.body);
-
-    const news_release_prefix = "https://news.gamestop.com";
-
-    var div_panels = dom.window.document.getElementsByClassName("panel");
-    var news_releases = [];
-    for (var i=0; i<div_panels.length; i++) {
-        var element = div_panels[i];
-        var link = element.querySelectorAll('span a')[1];
-        var date_posted = element.querySelector('span div div').textContent.replace(/\s\s+/g, ' ');
-        var headline = link.textContent;
-
-        var parsed_date = date_posted.split("/");
-        var month = parsed_date[0].trim();
-        if (month.charAt(0) == '0') {
-            month = month.substr(1);
-        }
-        var day = parsed_date[1].trim();
-        if (day.charAt(0) == '0') {
-            day = day.substr(1);
-        }
-        var year = "20" + parsed_date[2].trim();
-        var readable_date = {"month": month, "day": day, "year": year};
-        var news_release = {'headline': headline, 'date': date_posted, 'link': news_release_prefix + link.href, 'readable_date': readable_date};
-        news_releases.push(news_release);
-    }
-    const todays_date = get_todays_date();
-    //console.log(todays_date);
-    //console.log(news_releases);
-    todays_news_releases = news_releases.filter(news => was_posted_today(news, todays_date));
-    //console.log(todays_news_releases);
-
-    return news_releases;
-}
-
-//checks the table on GameStop's website where SEC filings are listed
-async function get_the_filings() {
-    const filings_url = "https://news.gamestop.com/financial-information/sec-filings";
-    const response = await got(filings_url);
-    const dom = new JSDOM(response.body);
-
-    var table = dom.window.document.getElementsByTagName("table")[0];
-    var filings = [];
-    for (var i=1; i<table.rows.length; i++) {
-        //get current row 
-        var tabletr = table.rows[i];
-
-        //get first td element (date)
-        var date = tabletr.cells[0].textContent.replace(/\s\s+/g, ' ');
-
-        var parsed_date = date.split("/");
-        var month = parsed_date[0].trim();
-        if (month.charAt(0) == '0') {
-            month = month.substr(1);
-        }
-        var day = parsed_date[1].trim();
-        if (day.charAt(0) == '0') {
-            day = day.substr(1);
-        }
-        var year = "20" + parsed_date[2].trim();
-        var readable_date = {"month": month, "day": day, "year": year};
-
-        //get second td element (form number)
-        var form_num = tabletr.cells[1].textContent.replace(/\s\s+/g, ' ');
-
-        //get third td element (description)
-        var description = tabletr.cells[2].textContent.replace(/\s\s+/g, ' ');
-
-        //get fourth td element (filing group)
-        var filing_group = tabletr.cells[3].textContent.replace(/\s\s+/g, ' ');
-
-        //get fifth td element (filing links)
-        var filing_link = tabletr.cells[4].querySelector("div span a").href;
-
-        var sec_filing = {"date": date, "form_num": form_num, "description": description, "filing_group": filing_group, "filing_link": filing_link, "readable_date": readable_date};
-        filings.push(sec_filing);
-    }
-
-    const todays_date = get_todays_date();
-    //console.log(todays_date);
-    //console.log(filings);
-    todays_filings = filings.filter(filing => was_posted_today(filing, todays_date));
 }
 
 //TEST
@@ -599,56 +438,6 @@ async function load_careers_site() {
     await browser.close()
 }
 
-
-//note: only grabs first page of listings (max. 50 postings)
-// async function get_the_jobs() { 
-//     const response = await got(url);
-//     const dom = new JSDOM(response.body);
-
-//     var table = dom.window.document.getElementsByTagName("table")[0];
-//     var jobs = [];
-//     for (var i=1; i<table.rows.length; i++) {
-//         //get current row
-//         var tabletr = table.rows[i];
-        
-//         //get first td element which is job title
-//         var title = tabletr.cells[0];
-
-//         //get hyperlink to job posting 
-//         var link = url_prefix + title.querySelector("a").href;
-
-//         //get third td element which is job location
-//         var location = tabletr.cells[2].textContent;
-
-//         var stripped_location = location.replace(/\s\s+/g, ' ');
-//         var num_index = stripped_location.search(/\d/);
-
-//         var city_state = stripped_location.substring(0, num_index).trim();
-//         var address = stripped_location.substring(num_index, stripped_location.length).trim();
-
-//         //get fourth td element which is date posted
-//         var date = tabletr.cells[3].textContent.replace(/\s\s+/g, ' ');
-//         console.log('date: ' + date);
-        
-//         var date_pieces = date.split('/');
-//         var month = date_pieces[0].trim();
-//         var day = date_pieces[1].trim();
-//         var year = date_pieces[2].trim();
-//         var readable_date = {'month': month, 'day': day, 'year': year};
-
-//         jobs.push({'title': title.textContent.replace(/\s\s+/g, ' ').trim(), 'link': link, 'address': address, 'city_state': city_state, 'readable_date': readable_date});
-//     }
-
-//     const todays_date = get_todays_date();
-//     //console.log('todays date: ', todays_date);
-
-//     todays_jobs = jobs.filter(job => was_posted_today(job, todays_date));
-
-//     //console.log(todays_jobs);
-//     todays_num_jobs = todays_jobs.length;
-//     //fs.writeFileSync('./'+today.month+'-'+today.day+'-'+today.year+'_listings.json', JSON.stringify(todays_jobs, null, 2) , 'utf-8');
-// }
-
 //returns current date in CST (Chicago) time
 function get_todays_date() {    
     today = new Date().toLocaleString("en-US", {timeZone: "America/Chicago"}).split(',')[0];
@@ -670,26 +459,3 @@ function was_posted_today(entry, todays_date) {
 function city_state_formatter(job) {
     return job.address + " " + (job.city_state != 'undefined' ? job.city_state : " ");
 }
-
-//will send a .json of the current job listings. currently unused
-// function sendFiles(channelID, fileArr, interval) {
-// 	var resArr = [], len = fileArr.length;
-// 	var callback = typeof(arguments[2]) === 'function' ? arguments[2] : arguments[3];
-// 	if (typeof(interval) !== 'number') interval = 1000;
-
-// 	function _sendFiles() {
-// 		setTimeout(function() {
-// 			if (fileArr[0]) {
-// 				bot.uploadFile({
-// 					to: channelID,
-// 					file: fileArr.shift()
-// 				}, function(err, res) {
-// 					resArr.push(err || res);
-// 					if (resArr.length === len) if (typeof(callback) === 'function') callback(resArr);
-// 				});
-// 				_sendFiles();
-// 			}
-// 		}, interval);
-// 	}
-// 	_sendFiles();
-// }

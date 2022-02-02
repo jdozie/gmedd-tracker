@@ -1,0 +1,23 @@
+{
+    "name": "gme-careers",
+    "version": "1.0.0",
+    "description": "bot that grabs job listings from gamestops career website for the current date.",
+    "main": "bot.js",
+    "author": "jenna",
+    "dependencies": {
+        "axios": "^0.25.0",
+        "cheerio": "^1.0.0-rc.10",
+        "chromium": "^3.0.3",
+        "discord.js": "^12.5.3",
+        "fetch": "^1.1.0",
+        "googleapis": "^94.0.0",
+        "got": "^11.8.3",
+        "got-scraping": "^3.2.8",
+        "jsdom": "^16.7.0",
+        "jssoup": "0.0.15",
+        "node-cron": "^3.0.0",
+        "node-fetch": "^2.6.7",
+        "puppeteer": "^13.1.1",
+        "xmlhttprequest": "^1.8.0"
+    }
+}

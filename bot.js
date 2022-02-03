@@ -359,25 +359,28 @@ async function load_careers_site() {
     //write today's listings to google sheet
     for (j in todays_jobs) {
         var json = JSON.stringify(j)
-        try {
-            const { newJobDate, newJobTitle, newJobURL, newJobCategory, newJobLocation } = json
-            const { sheets } = await authentication()
-            const writeReq = await sheets.spreadsheets.values.append({
-                spreadsheetId: id, 
-                range: 'Sheet1', 
-                valueInputOption: 'USER_ENTERED',
-                resource: {
-                    values: [
-                        [newJobTitle, newJobURL, newJobCategory, newJobLocation, newJobDate]
-                    ]
-                }
-            })
-            if (writeReq.status === 200) {
-                console.log('Spreadsheet updated successfully!')
-            }
-        } catch(e) {
-            console.log('Error updating spreadsheet', e)
+        const { newJobDate, newJobTitle, newJobURL, newJobCategory, newJobLocation } = json
+        const { sheets } = await authentication()
+        let values = [
+            [
+                newJobTitle, newJobURL, newJobCategory, newJobLocation, newJobDate
+            ],
+        ]
+        let resource = {
+            values,
         }
+        const writeReq = await sheets.spreadsheets.values.append({
+            spreadsheetId: id, 
+            range: 'Sheet1', 
+            valueInputOption: 'USER_ENTERED',
+            resource: resource,
+        }, (err, result) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(`${result.updates.updatedCells} cells appended.`)
+            }
+        })
     }
     todays_num_jobs = todays_jobs.length
 

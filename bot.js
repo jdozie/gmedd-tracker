@@ -328,9 +328,7 @@ async function load_careers_site() {
     page.waitForSelector('#sortselect')
     await page.select('#sortselect', 'Most recent')
     //screenshot
-    await page.screenshot({path: 'current-listings-page'+parseInt(pageNum)+'.png', fullPage: true})
-    todays_jobs = []
-    
+    await page.screenshot({path: 'current-listings-page'+parseInt(pageNum)+'.png', fullPage: true})    
     const jobs = await page.evaluate(() => {
         temp = []
         const dates = Array.from(document.querySelectorAll('[data-ph-at-job-post-date-text]')).map(x => x.getAttribute('data-ph-at-job-post-date-text'))
@@ -384,10 +382,10 @@ async function load_careers_site() {
             console.log('Error updating spreadsheet', e)
         }
     }
-    todays_num_jobs = todays_jobs.length
+    todays_num_jobs = todays_jobs.length()
 
     //determine if we need to go to the next page
-    if (todays_jobs == 10) {
+    if (todays_num_jobs == 10) {
         pageNum++
         start(pageNum)
     }

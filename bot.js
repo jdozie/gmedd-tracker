@@ -375,14 +375,17 @@ async function load_careers_site() {
                 }
             })
             if (writeReq.status === 200) {
+                console.log('Spreadsheet updated successfully!')
                 return 'Spreadsheet updated successfully!'
             }
+            console.log('Something went wrong updating the spreadsheet :( ')
             return 'Something went wrong updating the spreadsheet :( '
         } catch(e) {
             console.log('Error updating spreadsheet', e)
         }
     }
-    todays_num_jobs = todays_jobs.length()
+    console.log(todays_jobs.length)
+    todays_num_jobs = todays_jobs.length
 
     //determine if we need to go to the next page
     if (todays_num_jobs == 10) {

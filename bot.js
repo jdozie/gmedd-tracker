@@ -379,7 +379,6 @@ async function load_careers_site() {
             console.log('Error updating spreadsheet', e)
         }
     }
-    console.log(todays_jobs.length)
     todays_num_jobs = todays_jobs.length
 
     //determine if we need to go to the next page

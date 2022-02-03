@@ -144,7 +144,7 @@ function display_todays_jobs(msg, logoattachment) {
             for (var i = 0; i < 15; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+job.category+`\n`+job.location}    
+                    { name: `⠀`, value: `[${job.title}](${job.link})\n Category: `+job.category+`\n`+job.location}    
                 );  
             }    
         }
@@ -152,7 +152,7 @@ function display_todays_jobs(msg, logoattachment) {
             for (var i = 0; i < todays_jobs.length; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+job.category+`\n`+job.location}    
+                    { name: `⠀`, value: `[${job.title}](${job.link})\n Category: `+job.category+`\n`+job.location}    
                 );  
             }    
         }

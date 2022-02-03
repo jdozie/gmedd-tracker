@@ -369,7 +369,7 @@ async function load_careers_site() {
         let resource = {
             values,
         }
-        const writeReq = await sheets.spreadsheets.values.append({
+        sheets.spreadsheets.values.append({
             spreadsheetId: id, 
             range: 'Sheet1', 
             valueInputOption: 'USER_ENTERED',

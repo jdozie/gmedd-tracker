@@ -130,10 +130,8 @@ function display_todays_jobs(msg, logoattachment) {
     .setTimestamp()
     .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
 
-    if (todays_num_jobs == 50) {
-        embed.setDescription(`GameStop posted at least **${todays_num_jobs}** new jobs today. Here are the first 15.`)
-    }
-    else if (todays_num_jobs > 15) {
+
+    if (todays_num_jobs > 15) {
         embed.setDescription(`GameStop posted **${todays_num_jobs}** new jobs today. Here are the first 15.`)
     }
     else {
@@ -376,10 +374,7 @@ async function load_careers_site() {
             })
             if (writeReq.status === 200) {
                 console.log('Spreadsheet updated successfully!')
-                return 'Spreadsheet updated successfully!'
             }
-            console.log('Something went wrong updating the spreadsheet :( ')
-            return 'Something went wrong updating the spreadsheet :( '
         } catch(e) {
             console.log('Error updating spreadsheet', e)
         }

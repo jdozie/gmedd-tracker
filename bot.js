@@ -355,34 +355,6 @@ async function load_careers_site() {
     todays_date = get_todays_date()
     todays_jobs = jobs.filter(j => was_posted_today(j, todays_date))
     console.log(`Today's jobs on page ${pageNum}`,todays_jobs)
-
-    //write today's listings to google sheet
-    for (j in todays_jobs) {
-        var json = JSON.stringify(j)
-        const { newJobDate, newJobTitle, newJobURL, newJobCategory, newJobLocation } = json
-        const { sheets } = await authentication()
-        let values = [
-            [
-                newJobTitle, newJobURL, newJobCategory, newJobLocation, newJobDate
-            ],
-        ]
-        let resource = {
-            values,
-        }
-        sheets.spreadsheets.values.append({
-            spreadsheetId: id, 
-            range: 'Sheet1', 
-            valueInputOption: 'USER_ENTERED',
-            resource: resource,
-        }, (err, result) => {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log(result)
-               // console.log(`${result.updates.updatedCells} cells appended.`)
-            }
-        })
-    }
     todays_num_jobs = todays_jobs.length
 
     //determine if we need to go to the next page

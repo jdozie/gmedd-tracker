@@ -378,7 +378,8 @@ async function load_careers_site() {
             if (err) {
                 console.log(err)
             } else {
-                console.log(`${result.updates.updatedCells} cells appended.`)
+                console.log(result)
+               // console.log(`${result.updates.updatedCells} cells appended.`)
             }
         })
     }

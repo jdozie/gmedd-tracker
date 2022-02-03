@@ -302,7 +302,7 @@ async function get_the_report() {
 //TEST
 async function load_careers_site() {
     //launch
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({args: ['--no-sandbox']})
     const page = await browser.newPage()
 
     //if any unhandled promise rejections are encountered, exit the browser

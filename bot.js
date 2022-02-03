@@ -325,8 +325,8 @@ async function load_careers_site() {
     
     await page.goto(careersPage)
     //filter by most recent and make sure it loads
-    await page.select('#sortselect', 'Most recent')
-    page.waitForSelector('#sortselect')
+    await page.select('select#sortselect', 'Most recent')
+    //page.waitForSelector('#sortselect')
     //screenshot
     await page.screenshot({path: 'current-listings-page'+parseInt(pageNum)+'.png', fullPage: true})    
     const jobs = await page.evaluate(() => {

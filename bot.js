@@ -354,7 +354,7 @@ async function load_careers_site() {
     console.log("Jobs from page " + parseInt(pageNum))
     jobs.forEach(j => console.log(j))
     //capture jobs in text file
-    fs.writeFile('jobs.txt', JSON.stringify(jobs, null, 2), {flag: "a+"})
+    //fs.writeFile('jobs.txt', JSON.stringify(jobs, null, 2), {flag: "a+"})
 
     todays_date = get_todays_date()
     todays_jobs = jobs.filter(j => was_posted_today(j, todays_date))

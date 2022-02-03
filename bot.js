@@ -35,6 +35,7 @@ const gmedd_report_model_url = "https://gmedd.com/report-model/";
 var today = "";
 var todays_num_jobs = 0;
 var todays_jobs = [];
+var pageNum = 1
 
 // Initialize Discord Bot
 var client = new Discord.Client();

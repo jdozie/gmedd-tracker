@@ -45,17 +45,17 @@ client.on('ready', async function (evt) {
     console.log(`Logged in as ${client.user.tag}`);
     const logoattachment = new Discord.MessageAttachment('./logo.png', 'logo.png');
 
-    // var gme_channel = client.channels.cache.find(channel => channel.name.toLowerCase() === '🔬gme-tracker');
-    // //cron job to automatically spin up job listing search daily in the evenings 
-    // cron.schedule('00 22 * * 0-6', async function() {
-    //      //console.log(gme_channel);
-    //      //console.log('Running !jobs at 22:00 (10PM) CST every day');
-    //      await get_the_jobs();
-    //      display_todays_jobs(gme_channel, logoattachment);
-    // }, {
-    //     scheduled: true,
-    //     timezone: "America/Chicago"
-    // });
+    var gme_channel = client.channels.cache.find(channel => channel.name.toLowerCase() === '🔬gme-tracker');
+    //cron job to automatically spin up job listing search daily in the evenings 
+    cron.schedule('00 22 * * 0-6', async function() {
+         //console.log(gme_channel);
+         //console.log('Running !jobs at 22:00 (10PM) CST every day');
+         await get_the_jobs();
+         display_todays_jobs(gme_channel, logoattachment);
+    }, {
+        scheduled: true,
+        timezone: "America/Chicago"
+    });
 });
 
 client.on('message', async msg => {
@@ -107,7 +107,7 @@ client.on('message', async msg => {
                 display_the_order_form(msg, order_form, logoattachment);
                 break;
             case 'test':
-                await load_careers_site();
+                await get_the_jobs();
                 display_todays_jobs(msg, logoattachment);
                 break;
             case 'commands':
@@ -298,8 +298,7 @@ async function get_the_report() {
     return link;
 }
 
-//TEST
-async function load_careers_site() {
+async function get_the_jobs() {
     //launch
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
     const page = await browser.newPage()

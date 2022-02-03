@@ -307,10 +307,10 @@ async function load_careers_site() {
     const page = await browser.newPage()
 
     //if any unhandled promise rejections are encountered, exit the browser
-    process.on('unhandledRejection', (reason, p) => {
+    process.on('unhandledRejection', async (reason, p) => {
         console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
         await browser.close();
-      });
+    });
 
     if (pageNum > 10) {
         //no need to travel further than this

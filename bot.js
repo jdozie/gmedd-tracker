@@ -90,9 +90,9 @@ client.on('message', async msg => {
                 var hires = await get_the_hires();
                 display_the_hires(msg, hires, logoattachment);
                 break;
-            case 'press':
-                var press = await get_the_press();
-                display_the_press(msg, press, logoattachment);
+            case 'media':
+                var media = await get_the_media();
+                display_the_media(msg, media, logoattachment);
                 break;
             case 'model':
                 var model = await get_the_model();
@@ -195,18 +195,18 @@ function display_the_hires(msg, hires, logoattachment) {
     msg.channel.send(hires_embed);
 }
 
-function display_the_press(msg, press, logoattachment) {
+function display_the_media(msg, media, logoattachment) {
     //build embed properties
-    let press_embed = new Discord.MessageEmbed()
-    .setTitle(`Ryan Cohen Press`)
+    let media_embed = new Discord.MessageEmbed()
+    .setTitle(`Ryan Cohen Media`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .setDescription(`Links to various media appearances by Ryan Cohen (articles, video interviews).`)
-    .addField('⠀', press);
-    msg.channel.send(press_embed);
+    .addField('⠀', media);
+    msg.channel.send(media_embed);
 }
 
 function display_the_report(msg, report, logoattachment) {
@@ -247,7 +247,7 @@ function display_the_help(msg, logoattachment) {
     .addFields(
         //{name: `**!jobs**`, value: 'Returns a list of jobs that were posted today on gamestop.com, if available. Runs daily in #🔬gme-tracker.'},
         {name: `**/hires**`, value: `Returns link to the LinkedIn hires spreadsheet from [GMEdd](GMEdd.com)`},
-        {name: `**/press**`, value: `Returns link to the Ryan Cohen Press spreadsheet from [GMEdd](GMEdd.com)`},
+        {name: `**/media**`, value: `Returns link to the Ryan Cohen Media spreadsheet from [GMEdd](GMEdd.com)`},
         {name: `**/model**`, value: `Returns link to the current [GMEdd](GMEdd.com) GameStop financial model`},
         {name: `**/report**`, value: `Returns link to the [GMEdd](GMEdd.com) GameStop Research Report`},
         {name: `**/orders**`, value: `Returns link to the GMEdd GameStop Order Form`}
@@ -260,8 +260,8 @@ async function get_the_hires() {
     return "https://gmedd.com/hires";
 }
 
-//direct link to rc press spreadsheet from gmedd.com
-async function get_the_press() {
+//direct link to rc media spreadsheet from gmedd.com
+async function get_the_media() {
    return "https://gmedd.com/rcmedia";
 }
 

@@ -107,6 +107,7 @@ client.on('message', async msg => {
                 break;
             case 'test':
                 await load_careers_site();
+                display_todays_jobs(msg, logoattachment);
                 break;
             case 'commands':
                 display_the_help(msg, logoattachment);
@@ -117,7 +118,7 @@ client.on('message', async msg => {
 
 client.login(token);
 
-function display_todays_jobs(channel, logoattachment) {
+function display_todays_jobs(msg, logoattachment) {
     //build embed properties
     let embed = new Discord.MessageEmbed()
     .setTitle(`${today} Career Postings`)
@@ -144,7 +145,7 @@ function display_todays_jobs(channel, logoattachment) {
             for (var i = 0; i < 15; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+city_state_formatter(job)}    
+                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+job.category+`\n`+job.location}    
                 );  
             }    
         }
@@ -152,7 +153,7 @@ function display_todays_jobs(channel, logoattachment) {
             for (var i = 0; i < todays_jobs.length; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+city_state_formatter(job)}    
+                    { name: `⠀`, value: `[${job.title}](${job.link})\n`+job.category+`\n`+job.location}    
                 );  
             }    
         }
@@ -160,7 +161,7 @@ function display_todays_jobs(channel, logoattachment) {
     }
 
     //send embedded response
-    channel.send(embed)
+    msg.channel.send(embed)
             //.then(console.log)
             .catch(console.error);        
 
@@ -382,6 +383,7 @@ async function load_careers_site() {
             console.log('Error updating spreadsheet', e)
         }
     }
+    todays_num_jobs = todays_jobs.length
 
     //determine if we need to go to the next page
     if (todays_jobs == 10) {
@@ -408,9 +410,4 @@ function get_todays_date() {
 //check if the job listing from web scrape is from today's date
 function was_posted_today(entry, todays_date) {
     return (entry.readable_date.day == todays_date.day && entry.readable_date.month == todays_date.month && entry.readable_date.year == todays_date.year); 
-}
-
-//if city_state is undefined, return an empty string. else, return city_state string value
-function city_state_formatter(job) {
-    return job.address + " " + (job.city_state != 'undefined' ? job.city_state : " ");
 }

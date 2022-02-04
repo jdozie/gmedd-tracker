@@ -127,15 +127,12 @@ function display_todays_jobs(channel, logoattachment) {
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
-
-
     if (todays_num_jobs > 15) {
         embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}`)
     }
     else {
         embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}.`)
     }
-
     //list each individual job posting in the embed
     if (todays_jobs.length > 0) {
         if (todays_jobs.length > 15) {
@@ -156,11 +153,9 @@ function display_todays_jobs(channel, logoattachment) {
         }
     
     }
-
     //send embedded response
     channel.send(embed)
-           .catch(console.error);        
-
+           .catch(console.error);
 }
 
 function display_the_model(msg, model, logoattachment) {

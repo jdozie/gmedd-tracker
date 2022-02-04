@@ -299,9 +299,13 @@ async function get_the_skus() {
     //launch
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
     const page = await browser.newPage()
+    //if any unhandled promise rejections are encountered, exit the browser
+    process.on('unhandledRejection', async (reason, p) => {
+        console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
+        await browser.close();
+    });
     const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
     await page.goto(url, {waitUntil: 'networkidle0'})
-    await page.waitForSelector('span.pageResults', {timeout: 0})
     const instockSkus = await page.evaluate(() => {
         var element = document.querySelector('span.pageResults').textContent
         console.log(element)
@@ -316,24 +320,20 @@ async function get_the_jobs() {
     //launch
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
     const page = await browser.newPage()
-
     //if any unhandled promise rejections are encountered, exit the browser
     process.on('unhandledRejection', async (reason, p) => {
         console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
         await browser.close();
     });
-
     if (pageNum > 10) {
         //no need to travel further than this
         await browser.close()
         return
     }
-    
     //request careers webpage
     const url = 'https://careers.gamestop.com/us/en/search-results?keywords='
     const careersPage = url.concat('&from=', parseInt((pageNum * 10) - 10))
-    console.log(careersPage)
-    
+    //console.log(careersPage)
     await page.goto(careersPage)
     //filter by most recent and make sure it loads
     await page.waitForSelector('#sortselect')
@@ -364,18 +364,15 @@ async function get_the_jobs() {
     jobs.forEach(j => console.log(j))
     //capture jobs in text file
     //fs.writeFile('jobs.txt', JSON.stringify(jobs, null, 2), {flag: "a+"})
-
     todays_date = get_todays_date()
     todays_jobs = jobs.filter(j => was_posted_today(j, todays_date))
     console.log(`Today's jobs on page ${pageNum}`,todays_jobs)
     todays_num_jobs = todays_jobs.length
-
     //determine if we need to go to the next page
     if (todays_num_jobs == 10) {
         pageNum++
         start(pageNum)
     }
-
     //close browser
     await browser.close()
 }

@@ -106,10 +106,6 @@ client.on('message', async msg => {
                 var order_form = await get_the_order_form();
                 display_the_order_form(msg, order_form, logoattachment);
                 break;
-            case 'test':
-                await get_the_jobs();
-                display_todays_jobs(msg, logoattachment);
-                break;
             case 'skus': 
                 var totalskus = await get_the_skus();
                 msg.channel.send("Total SKUs in stock: " + totalskus)
@@ -122,7 +118,7 @@ client.on('message', async msg => {
 
 client.login(token);
 
-function display_todays_jobs(msg, logoattachment) {
+function display_todays_jobs(channel, logoattachment) {
     //build embed properties
     let embed = new Discord.MessageEmbed()
     .setTitle(`${today} Career Postings`)
@@ -163,9 +159,8 @@ function display_todays_jobs(msg, logoattachment) {
     }
 
     //send embedded response
-    msg.channel.send(embed)
-            //.then(console.log)
-            .catch(console.error);        
+    channel.send(embed)
+           .catch(console.error);        
 
 }
 
@@ -239,7 +234,7 @@ function display_the_order_form(msg, order_form, logoattachment) {
 
 function display_the_help(msg, logoattachment) {
     let embed = new Discord.MessageEmbed()
-    .setTitle('Bot Commands')
+    .setTitle('GameStop Tracker Available Commands')
     .attachFiles(logoattachment)
     .setAuthor('GMEdd.com', null, 'https://GMEdd.com')
     .setColor('#242424')
@@ -306,11 +301,13 @@ async function get_the_skus() {
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
     const page = await browser.newPage()
     const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
-    await page.goto(url)
+    await page.goto(url, {waitUntil: 'networkidle0'})
+    await page.waitForSelector('span.pageResults', {timeout: 0})
     const instockSkus = await page.evaluate(() => {
-        var skus = document.querySelector('span.pageResults product-search-count')
-        console.log(skus)
-        return parseInt(skus)
+        var element = document.querySelector('span.pageResults').textContent
+        console.log(element)
+        return "42,069"
+        //return document.querySelector('span.pageResults').textContent.trim().split("Results for")[0].trim()
     })
     await browser.close()
     return instockSkus

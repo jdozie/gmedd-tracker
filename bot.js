@@ -121,7 +121,6 @@ client.login(token);
 function display_todays_jobs(channel, logoattachment) {
     //build embed properties
     let embed = new Discord.MessageEmbed()
-    .setTitle(`${today} Career Postings`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
@@ -131,10 +130,10 @@ function display_todays_jobs(channel, logoattachment) {
 
 
     if (todays_num_jobs > 15) {
-        embed.setDescription(`GameStop posted **${todays_num_jobs}** new jobs today. Here are the first 15.`)
+        embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}`)
     }
     else {
-        embed.setDescription(`GameStop posted **${todays_num_jobs}** new jobs today.`)
+        embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}.`)
     }
 
     //list each individual job posting in the embed
@@ -167,68 +166,63 @@ function display_todays_jobs(channel, logoattachment) {
 function display_the_model(msg, model, logoattachment) {
     //build embed properties
     let model_embed = new Discord.MessageEmbed()
-    .setTitle(`GMEdd Financial Model`)
+    .setDescription(`[**GMEdd Financial Model**](${model})`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
-    .addField('⠀', model);
     msg.channel.send(model_embed);
 }
 
 function display_the_hires(msg, hires, logoattachment) {
     //build embed properties
     let hires_embed = new Discord.MessageEmbed()
-    .setTitle(`GameStop Tech and Ecommerce Hires`)
+    .setDescription(`[**GameStop Tech and Ecommerce Hires**](${hires})`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .setDescription(`Direct link to database of public GameStop tech & e-commerce hires tracked by GMEdd.`)
-    .addField('⠀', hires);
     msg.channel.send(hires_embed);
 }
 
 function display_the_media(msg, media, logoattachment) {
     //build embed properties
     let media_embed = new Discord.MessageEmbed()
-    .setTitle(`Ryan Cohen Media`)
+    .setDescription(`[**Ryan Cohen Media**](${media})`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .setDescription(`Links to various media appearances by Ryan Cohen (articles, video interviews).`)
-    .addField('⠀', media);
     msg.channel.send(media_embed);
 }
 
 function display_the_report(msg, report, logoattachment) {
     //build embed properties
     let report_embed = new Discord.MessageEmbed()
-    .setTitle(`GMEdd Research Report`)
+    .setDescription(`[**GMEdd Research Report**](${report})`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
-    .addField('⠀', report);
     msg.channel.send(report_embed);
 }
 
 function display_the_order_form(msg, order_form, logoattachment) {
     //build embed properties
     let order_form_embed = new Discord.MessageEmbed()
-    .setTitle(`GameStop Order Form`)
+    .setDescription(`[**GameStop Order Form**](${order_form})`)
     .attachFiles(logoattachment)
     .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .setDescription(`Direct link to GMEdd's Order Submission Form to track GameStop orders.`)
-    .addField('⠀', order_form);
     msg.channel.send(order_form_embed);
 }
 
@@ -244,7 +238,7 @@ function display_the_help(msg, logoattachment) {
         {name: `**/hires**`, value: `Returns link to the LinkedIn hires spreadsheet from [GMEdd](GMEdd.com)`},
         {name: `**/media**`, value: `Returns link to the Ryan Cohen Media spreadsheet from [GMEdd](GMEdd.com)`},
         {name: `**/model**`, value: `Returns link to the current [GMEdd](GMEdd.com) GameStop financial model`},
-        {name: `**/report**`, value: `Returns link to the [GMEdd](GMEdd.com) GameStop Research Report`},
+        {name: `**/report**`, value: `Returns link to the current [GMEdd](GMEdd.com) GameStop Research Report`},
         {name: `**/orders**`, value: `Returns link to the GMEdd GameStop Order Form`}
     );
     msg.channel.send(embed);

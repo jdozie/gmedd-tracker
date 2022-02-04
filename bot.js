@@ -143,7 +143,7 @@ function display_todays_jobs(channel, logoattachment) {
             for (var i = 0; i < 15; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n Category: **`+job.category+`**\n`+job.location}    
+                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n **`+job.category+`**\n`+job.location}    
                 );  
             }    
         }
@@ -151,7 +151,7 @@ function display_todays_jobs(channel, logoattachment) {
             for (var i = 0; i < todays_jobs.length; i++) {
                 var job = todays_jobs[i];
                 embed.addFields(
-                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n Category: **`+job.category+`**\n`+job.location}    
+                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n **`+job.category+`**\n`+job.location}    
                 );  
             }    
         }
@@ -306,7 +306,7 @@ async function get_the_skus() {
     });
     const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
     await page.goto(url, {waitUntil: 'networkidle0'})
-    const instockSkus = await page.evaluate(() => {
+    const instockSkus = await page.waitForFunction(() => {
         var element = document.querySelector('span.pageResults').textContent
         console.log(element)
         return "42,069"

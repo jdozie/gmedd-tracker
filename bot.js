@@ -241,7 +241,6 @@ function display_the_help(msg, logoattachment) {
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
     .addFields(
-        //{name: `**!jobs**`, value: 'Returns a list of jobs that were posted today on gamestop.com, if available. Runs daily in #🔬gme-tracker.'},
         {name: `**/hires**`, value: `Returns link to the LinkedIn hires spreadsheet from [GMEdd](GMEdd.com)`},
         {name: `**/media**`, value: `Returns link to the Ryan Cohen Media spreadsheet from [GMEdd](GMEdd.com)`},
         {name: `**/model**`, value: `Returns link to the current [GMEdd](GMEdd.com) GameStop financial model`},

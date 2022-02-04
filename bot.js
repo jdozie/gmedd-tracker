@@ -184,7 +184,6 @@ function display_the_hires(msg, hires, logoattachment) {
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
-    .setDescription(`Direct link to database of public GameStop tech & e-commerce hires tracked by GMEdd.`)
     msg.channel.send(hires_embed);
 }
 
@@ -197,7 +196,6 @@ function display_the_media(msg, media, logoattachment) {
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
-    .setDescription(`Links to various media appearances by Ryan Cohen (articles, video interviews).`)
     msg.channel.send(media_embed);
 }
 
@@ -222,7 +220,6 @@ function display_the_order_form(msg, order_form, logoattachment) {
     .setColor('#242424')
     .setThumbnail('attachment://logo.png')
     .setTimestamp()
-    .setDescription(`Direct link to GMEdd's Order Submission Form to track GameStop orders.`)
     msg.channel.send(order_form_embed);
 }
 

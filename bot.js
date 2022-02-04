@@ -110,6 +110,9 @@ client.on('message', async msg => {
                 await get_the_jobs();
                 display_todays_jobs(msg, logoattachment);
                 break;
+            case 'skus': 
+                var totalskus = await get_the_skus();
+                msg.channel.send("Total SKUs in stock: " + totalskus)
             case 'commands':
                 display_the_help(msg, logoattachment);
                 break;
@@ -298,6 +301,20 @@ async function get_the_report() {
     return link;
 }
 
+async function get_the_skus() {
+    //launch
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
+    const page = await browser.newPage()
+    const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
+    await page.goto(url)
+    await page.evaluate(() => {
+        var skus = document.querySelector('span.pageResults product-search-count').map(x => x.textContent)
+        var numSkus = parseInt(skus)
+        await browser.close()
+        return numSkus
+    })
+}
+
 async function get_the_jobs() {
     //launch
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
@@ -312,7 +329,7 @@ async function get_the_jobs() {
     if (pageNum > 10) {
         //no need to travel further than this
         await browser.close()
-        exit()
+        return
     }
     
     //request careers webpage

@@ -307,12 +307,12 @@ async function get_the_skus() {
     const page = await browser.newPage()
     const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
     await page.goto(url)
-    await page.evaluate(() => {
+    const instockSkus = await page.evaluate(() => {
         var skus = document.querySelector('span.pageResults product-search-count').map(x => x.textContent)
-        var numSkus = parseInt(skus)
-        await browser.close()
-        return numSkus
+        return parseInt(skus)
     })
+    await browser.close()
+    return instockSkus
 }
 
 async function get_the_jobs() {

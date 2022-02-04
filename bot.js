@@ -345,7 +345,7 @@ async function get_the_jobs() {
             const joblink = links[i]
             const jobtitle = titles[i].trim()
             const jobcategory = categories[i].replace("Category", "").replace(/[\r\n\t]/g, "").trim()
-            const joblocation = locations[i].replace("Location", "").replace(/[\r\n\t]/g, "").trim()
+            const joblocation = locations[i].replace("Location", "").replace(/[\r\n\t]/g, "").trim().split("United States of America")[0].trim()
             temp.push({date: jobdate, title: jobtitle, link: joblink, category: jobcategory, location: joblocation, readable_date: readable_date})
         }
         return temp

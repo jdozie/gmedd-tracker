@@ -135,22 +135,13 @@ function display_todays_jobs(channel, logoattachment) {
         else {
             embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}.`)
         }
-        if (todays_jobs.length > 15) {
-            for (var i = 0; i < 15; i++) {
-                var job = todays_jobs[i];
-                embed.addFields(
-                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n **`+job.category+`**\n`+job.location}    
-                );  
-            }    
-        }
-        else {
-            for (var i = 0; i < todays_jobs.length; i++) {
-                var job = todays_jobs[i];
-                embed.addFields(
-                    { name: `⠀`, value: `[**${job.title}**](${job.link})\n **`+job.category+`**\n`+job.location}    
-                );  
-            }    
-        }
+        var stopAt = (todays_jobs.length > 15) ? 15 : todays_jobs.length;
+        for (var i = 0; i < stopAt; i++) {
+            var job = todays_jobs[i];
+            embed.addFields(
+                { name: `⠀`, value: `[**${job.title}**](${job.link})\n **`+job.category+`**\n`+job.location}    
+            );  
+        }    
         //send embedded response
         channel.send(embed)
             .catch(console.error);

@@ -119,22 +119,22 @@ client.on('message', async msg => {
 client.login(token);
 
 function display_todays_jobs(channel, logoattachment) {
-    //build embed properties
-    let embed = new Discord.MessageEmbed()
-    .attachFiles(logoattachment)
-    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
-    .setColor('#242424')
-    .setThumbnail('attachment://logo.png')
-    .setTimestamp()
-    .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
-    if (todays_num_jobs > 15) {
-        embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}`)
-    }
-    else {
-        embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}.`)
-    }
     //list each individual job posting in the embed
     if (todays_jobs.length > 0) {
+        //build embed properties
+        let embed = new Discord.MessageEmbed()
+        .attachFiles(logoattachment)
+        .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
+        .setColor('#242424')
+        .setThumbnail('attachment://logo.png')
+        .setTimestamp()
+        .setFooter('Based on public data available on gamestop.com', client.user.avatarURL());
+        if (todays_num_jobs > 15) {
+            embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}`)
+        }
+        else {
+            embed.setDescription(`We found **${todays_num_jobs}** jobs for ${today}.`)
+        }
         if (todays_jobs.length > 15) {
             for (var i = 0; i < 15; i++) {
                 var job = todays_jobs[i];
@@ -151,11 +151,10 @@ function display_todays_jobs(channel, logoattachment) {
                 );  
             }    
         }
-    
+        //send embedded response
+        channel.send(embed)
+            .catch(console.error);
     }
-    //send embedded response
-    channel.send(embed)
-           .catch(console.error);
 }
 
 function display_the_model(msg, model, logoattachment) {

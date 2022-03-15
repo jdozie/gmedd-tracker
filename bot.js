@@ -4,6 +4,8 @@ const got = require('got')
 const cron = require('node-cron')
 const cheerio = require('cheerio')
 const puppeteer = require('puppeteer')
+const puppeteerExtra = require('puppeteer-extra')
+const pluginStealth = require('puppeteer-extra-plugin-stealth')
 const fs = require('fs')
 const { google } = require('googleapis')
 
@@ -106,9 +108,14 @@ client.on('message', async msg => {
                 var order_form = await get_the_order_form();
                 display_the_order_form(msg, order_form, logoattachment);
                 break;
+            case 'latest': 
+                var gmedd = await get_the_latest_gmedd();
+                msg.channel.send(gmedd.link)
+                break;
             case 'skus': 
                 var totalskus = await get_the_skus();
-                msg.channel.send("Total SKUs in stock: " + totalskus)
+                display_the_skus(msg, totalskus, logoattachment);
+                break;
             case 'commands':
                 display_the_help(msg, logoattachment);
                 break;
@@ -146,6 +153,18 @@ function display_todays_jobs(channel, logoattachment) {
         channel.send(embed)
             .catch(console.error);
     }
+}
+
+function display_the_skus(msg, skus, logoattachment) {
+    //build embed properties
+    let skus_embed = new Discord.MessageEmbed()
+    .setDescription(`[**${skus}**]('https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list')`)
+    .attachFiles(logoattachment)
+    .setAuthor(`GMEdd.com`, null, 'https://GMEdd.com')
+    .setColor('#242424')
+    .setThumbnail('attachment://logo.png')
+    .setTimestamp()
+    msg.channel.send(skus_embed);
 }
 
 function display_the_model(msg, model, logoattachment) {
@@ -273,23 +292,52 @@ async function get_the_report() {
 
 async function get_the_skus() {
     //launch
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
+    puppeteerExtra.use(pluginStealth())
+    const browser = await puppeteerExtra.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-setuid-sandbox', '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36']})
+    const context = await browser.createIncognitoBrowserContext()
+    const page = await context.newPage()
+    //if any unhandled promise rejections are encountered, exit the browser
+    process.on('unhandledRejection', async (reason, p) => {
+        console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
+        await browser.close();
+    });
+    await page.setViewport({ width: 1280, height: 720 });
+    const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
+    await page.goto(url)
+    await page.waitForTimeout(5000)
+    var instockSkus = ""
+    try {
+        await page.screenshot({path: 'try-block-screenshot.png', fullPage: true})
+        instockSkus = await page.evaluate(() => {
+            var element = document.querySelector('span.pageResults.product-search-count').innerText.trim()
+            return element
+        })
+    } catch (e) {
+        console.log(e)
+        await page.screenshot({path: 'catch-block-screenshot.png', fullPage: true})
+
+    }
+    await browser.close()
+    return instockSkus
+}
+
+async function get_the_latest_gmedd() {
+    //launch
+    const browser = await puppeteerExtra.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']})
     const page = await browser.newPage()
     //if any unhandled promise rejections are encountered, exit the browser
     process.on('unhandledRejection', async (reason, p) => {
         console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
         await browser.close();
     });
-    const url = 'https://www.gamestop.com/search/?prefn1=buryMaster&prefv1=In%20Stock&q=%3Fall&view=new&tileView=list'
-    await page.goto(url, {waitUntil: 'networkidle0'})
-    const instockSkus = await page.waitForFunction(() => {
-        var element = document.querySelector('span.pageResults').textContent
-        console.log(element)
-        return "42,069"
-        //return document.querySelector('span.pageResults').textContent.trim().split("Results for")[0].trim()
-    })
+    //request website 
+    const url = 'https://gmedd.com'
+    await page.goto(url, {waitUntil: 'networkidle2'})
+    let articletitle = await page.evaluate(() => document.querySelectorAll('.entry-title a')[1].innerText)
+    let articlelink = await page.evaluate(() => document.querySelectorAll('.entry-title a')[1].href)
+    let articleimg = await page.evaluate(() => document.querySelectorAll('.entry-content div div div div p img')[1].src)
     await browser.close()
-    return instockSkus
+    return {title: articletitle, link: articlelink, img: articleimg}
 }
 
 async function get_the_jobs() {
@@ -345,10 +393,10 @@ async function get_the_jobs() {
     console.log(`Today's jobs on page ${pageNum}`,todays_jobs)
     todays_num_jobs = todays_jobs.length
     //determine if we need to go to the next page
-    if (todays_num_jobs == 10) {
-        pageNum++
-        start(pageNum)
-    }
+    // if (todays_num_jobs == 10) {
+    //     pageNum++
+    //     start(pageNum)
+    // }
     //close browser
     await browser.close()
 }
